@@ -45,8 +45,16 @@ void loop()
   {
     time_2 += 1000;
     int next = (time_1+interval-millis())/1000;
+    int h = next/3600;
+    int m = (next-3600*h)/60;
+    int s = next-3600*h-60*m;
     Serial.print("Next water time in: ");
-    Serial.println(next);
+    Serial.print(h);
+    Serial.print("h ");
+    Serial.print(m);
+    Serial.print("m ");
+    Serial.print(s);
+    Serial.println("s");    
   }
 
 }
