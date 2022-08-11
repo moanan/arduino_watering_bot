@@ -1,16 +1,15 @@
 // Vacation water dispensor for Cai's plants
 
 // const
-const unsigned long NEXT_H = 1;
-const unsigned long NEXT_M = 1;
+const unsigned long NEXT_H = 48;
+const unsigned long NEXT_M = 0;
 const unsigned long NEXT_S = 0;
 const unsigned long WATERTIME_S = 20;
 
 // motor A
-int dir1PinA = 13;
-int dir2PinA = 12;
-int speedPinA = 10;
-
+const byte dir1PinA = 13;
+const byte dir2PinA = 12;
+const byte speedPinA = 10;
 
 int speed = 200;
 bool dir = 1;
@@ -25,11 +24,14 @@ void setup()
   Serial.begin(115200);
   pinMode(dir1PinA, OUTPUT);
   pinMode(speedPinA, OUTPUT);
-  interval = (unsigned long)(1440*NEXT_H + 60*NEXT_M + NEXT_S)*1000;
-//  interval = (unsigned long)(60*NEXT_M + NEXT_S)*1000;
+//  interval = (unsigned long)(3600*NEXT_H + 60*NEXT_M + NEXT_S)*1000;
+  interval = 172800000; // every two days
+
   waterTime = WATERTIME_S*1000;
   time_1 = millis();
   time_2 = millis();
+  // pump water for one time when power on
+  pump_water(waterTime, speed, dir);
 }
 
 void loop() 
@@ -43,22 +45,22 @@ void loop()
   }
 
 
-  if(millis() >= time_2 + 1000) // excute every 1 s
+  if(millis() >= time_2 + 1000) // print every 1 s
   {
     time_2 += 1000;
-    int next = (time_1+interval-millis())/1000;
-    int h = next/1440;
-    int m = (next-1440*h)/60;
-    int s = next-1440*h-60*m;
+    unsigned long next = (time_1+interval-millis())/1000;
+    unsigned long h = next/3600;
+    unsigned long m = (next-3600*h)/60;
+    unsigned long s = next-3600*h-60*m;
     Serial.print("Next water time in: ");
     Serial.print(h);
     Serial.print("h ");
     Serial.print(m);
     Serial.print("m ");
     Serial.print(s);
-    Serial.println("s");    
+    Serial.print("s,\t next in s: ");    
+    Serial.println(next);
   }
-
 }
 
 
