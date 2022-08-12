@@ -4,7 +4,7 @@
 const unsigned long NEXT_H = 48;
 const unsigned long NEXT_M = 0;
 const unsigned long NEXT_S = 0;
-const unsigned long WATERTIME_S = 20;
+const unsigned long WATERTIME_S = 30;
 
 // motor A
 const byte dir1PinA = 13;
