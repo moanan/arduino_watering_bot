@@ -6,11 +6,10 @@ LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars
 
 
 // const
-const unsigned long NEXT_H = 48;
-const unsigned long NEXT_M = 0;
-const unsigned long NEXT_S = 0;
+const unsigned long NEXT_H = 23;
+const unsigned long NEXT_M = 10;
+const unsigned long NEXT_S = 8;
 const unsigned long WATERTIME_S = 3;
-
 // motor A
 const byte dir1PinA = 13;
 const byte dir2PinA = 12;
@@ -34,12 +33,11 @@ void setup()
   lcd.init();
   lcd.backlight();  
   
-  //  interval = (unsigned long)(3600*NEXT_H + 60*NEXT_M + NEXT_S)*1000;
-  interval = 172800000; // every two days
-
+  interval = (unsigned long)(3600*NEXT_H + 60*NEXT_M + NEXT_S)*1000UL;  // didn't work
   waterTime = WATERTIME_S*1000;
   time_1 = millis();
   time_2 = millis();
+  
   // pump water for one time when power on
   lcd.clear();
   lcd.backlight();  
@@ -49,7 +47,6 @@ void setup()
   lcd.print(WATERTIME_S);
   lcd.print(" s");
   pump_water(waterTime, speed, dir);
-
 }
 
 void loop() 
