@@ -1,10 +1,15 @@
 // Vacation water dispensor for Cai's plants
 
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
+
+
 // const
 const unsigned long NEXT_H = 48;
 const unsigned long NEXT_M = 0;
 const unsigned long NEXT_S = 0;
-const unsigned long WATERTIME_S = 30;
+const unsigned long WATERTIME_S = 3;
 
 // motor A
 const byte dir1PinA = 13;
@@ -24,14 +29,27 @@ void setup()
   Serial.begin(115200);
   pinMode(dir1PinA, OUTPUT);
   pinMode(speedPinA, OUTPUT);
-//  interval = (unsigned long)(3600*NEXT_H + 60*NEXT_M + NEXT_S)*1000;
+
+  // LCD
+  lcd.init();
+  lcd.backlight();  
+  
+  //  interval = (unsigned long)(3600*NEXT_H + 60*NEXT_M + NEXT_S)*1000;
   interval = 172800000; // every two days
 
   waterTime = WATERTIME_S*1000;
   time_1 = millis();
   time_2 = millis();
   // pump water for one time when power on
+  lcd.clear();
+  lcd.backlight();  
+  lcd.setCursor(0,0);
+  lcd.print("I'm watering for ");
+  lcd.setCursor(0,1);
+  lcd.print(WATERTIME_S);
+  lcd.print(" s");
   pump_water(waterTime, speed, dir);
+
 }
 
 void loop() 
@@ -60,6 +78,18 @@ void loop()
     Serial.print(s);
     Serial.print("s,\t next in s: ");    
     Serial.println(next);
+
+    lcd.clear();
+    lcd.noBacklight();
+    lcd.setCursor(0,0);
+    lcd.print("Next watering in ");
+    lcd.setCursor(0,1);
+    lcd.print(h);
+    lcd.print("h ");
+    lcd.print(m);
+    lcd.print("m ");
+    lcd.print(s);
+    lcd.print("s");
   }
 }
 
@@ -68,6 +98,14 @@ void print_time(unsigned long time_millis){
   Serial.print("Time: ");
   Serial.print(time_millis/1000);
   Serial.println("s, watering now!");
+  
+  lcd.clear();
+  lcd.backlight();  
+  lcd.setCursor(0,0);
+  lcd.print("I'm watering for ");
+  lcd.setCursor(0,1);
+  lcd.print(WATERTIME_S);
+  lcd.print(" s");
 }
 
 void pump_water(int time_millis, int speed, bool direction)
